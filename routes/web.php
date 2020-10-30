@@ -17,5 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::resource('books', 'BooksController');
+
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/saveExpressions','HomeController@ajaxSaveExpressions');

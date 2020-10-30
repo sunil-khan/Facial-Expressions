@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class BookController extends Controller
+class BooksController extends Controller
 {
     /**
      * Show the application dashboard.
