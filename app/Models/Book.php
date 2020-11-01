@@ -8,6 +8,6 @@ class Book extends Model
 {
     protected $primaryKey = 'book_id';
     protected $fillable = [
-        'book_title','book_slug','book_thumb','book_file','book_status',
+        'book_title','book_author_name','book_slug','book_thumb','book_file','book_status',
     ];
 }

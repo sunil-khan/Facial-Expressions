@@ -4,9 +4,9 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Books</div>
+                    <div class="card-header">Title: {{ $book->book_title }}, Author Name: {{ $book->book_author_name }}</div>
                     <div class="card-body">
-                        <web-viewer-component :initial_doc="232"></web-viewer-component>
+                        <web-viewer-component :book="{{ $book }}"></web-viewer-component>
                     </div>
                 </div>
             </div>

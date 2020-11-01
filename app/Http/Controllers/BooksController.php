@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class BooksController extends Controller
 {
@@ -13,7 +15,8 @@ class BooksController extends Controller
      */
     public function index()
     {
-        return view('index');
+        $books = Book::where('book_status',1)->get();
+        return view('books.index',compact('books'));
     }
 
     /**
@@ -21,8 +24,13 @@ class BooksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        return view('index');
+        $book = Book::where('book_slug',$slug)->first();
+        if(!$book){
+            Session::flash('error_message', 'No Record found.');
+            return redirect(route('books.index'));
+        }
+        return view('books.show',compact('book'));
     }
 }

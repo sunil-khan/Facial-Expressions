@@ -18,6 +18,7 @@ class CreateBooksTable extends Migration
             $table->string('book_title');
             $table->string('book_slug');
             $table->string('book_thumb');
+            $table->string('book_author_name');
             $table->string('book_file');
             $table->boolean('book_status')->default(1)->nullable();
             $table->timestamps();

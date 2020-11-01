@@ -15,12 +15,10 @@ class CreateBookReadingStatsTable extends Migration
     {
         Schema::create('book_reading_stats', function (Blueprint $table) {
             $table->increments('stats_id');
-            $table->unsignedInteger('user_id');
-            $table->unsignedInteger('book_id');
             $table->unsignedInteger('reading_id');
             $table->unsignedInteger('book_page_number');
-            $table->time('start_time');
-            $table->time('end_time');
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->timestamps();
         });
     }

@@ -1738,55 +1738,94 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['initial_doc', 'book'],
-  mounted: function mounted() {
-    console.log(window.Laravel.baseUrl);
-    var path = window.Laravel.baseUrl + '/webviewer';
-    var viewer = this.$refs.viewer;
-    _pdftron_webviewer__WEBPACK_IMPORTED_MODULE_1___default()({
-      licenseKey: null,
-      fullAPI: true,
-      path: path,
-      initialDoc: 'files/sample.pdf'
-    }, viewer).then(function (instance) {
-      instance.setTheme('dark');
-      var docViewer = instance.docViewer,
-          annotManager = instance.annotManager,
-          PDFNet = instance.PDFNet;
-      console.log(docViewer);
-      docViewer.on('pageNumberUpdated', function (pageNumber) {
-        console.log("pageNumberUpdated");
-        console.log(pageNumber);
-      });
-      docViewer.on('visiblePagesChanged', function (pageNumber, canvas) {
-        console.log("visiblePagesChanged");
-        console.log(pageNumber, canvas);
-      });
-      docViewer.on('documentLoaded', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var doc;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                doc = docViewer.getDocument();
-                console.log("Total Pages: " + docViewer.getPageCount()); // call methods relating to the loaded document
-
-                console.log("documentLoaded");
-
-              case 3:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      })));
-    });
+  props: ['book'],
+  data: function data() {
     return {
-      viewer: viewer
+      total_pages: 0,
+      current_page: 1
     };
+  },
+  mounted: function mounted() {
+    this.loadBook();
   },
   methods: {
     loadBook: function loadBook() {
+      var obj_book = this.book;
+      var pdf_path = window.Laravel.baseUrl + '/uploads/books/' + obj_book.book_file;
+      var path = window.Laravel.baseUrl + '/webviewer';
+      var viewer = this.$refs.viewer;
+      _pdftron_webviewer__WEBPACK_IMPORTED_MODULE_1___default()({
+        licenseKey: null,
+        fullAPI: true,
+        path: path,
+        initialDoc: pdf_path
+      }, viewer).then(function (instance) {
+        instance.setTheme('dark');
+        var docViewer = instance.docViewer,
+            annotManager = instance.annotManager,
+            PDFNet = instance.PDFNet;
+
+        function openBookReading(current_page, total_pages) {
+          axios.post('/api/v1/open-book-reading-track', {
+            book_id: obj_book.book_id,
+            current_page: current_page,
+            total_pages: total_pages
+          }).then(function (response) {
+            console.log(response.data.message);
+          }, function (error) {
+            console.log(error);
+          });
+        }
+
+        function bookReading(current_page, total_pages) {
+          axios.post('/api/v1/book-reading-track', {
+            book_id: obj_book.book_id,
+            current_page: current_page,
+            total_pages: total_pages
+          }).then(function (response) {
+            console.log(response.data.message);
+          }, function (error) {
+            console.log(error);
+          });
+        }
+
+        console.log(docViewer);
+        docViewer.on('pageNumberUpdated', function (pageNumber) {
+          console.log("pageNumberUpdated");
+          console.log(pageNumber);
+          bookReading(pageNumber, docViewer.getPageCount());
+        });
+        docViewer.on('visiblePagesChanged', function (pageNumber, canvas) {
+          console.log("visiblePagesChanged");
+          console.log(pageNumber, canvas);
+        });
+        docViewer.on('documentLoaded', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+          var doc, total_pages;
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  doc = docViewer.getDocument(); //this.total_pages = docViewer.getPageCount();
+
+                  console.log("Total Pages: " + docViewer.getPageCount()); // call methods relating to the loaded document
+
+                  console.log("documentLoaded");
+                  total_pages = docViewer.getPageCount();
+                  if (total_pages > 0) openBookReading(1, total_pages);
+
+                case 5:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee);
+        })));
+      });
+      return {
+        viewer: viewer
+      };
+    },
+    getBook: function getBook() {
       axios.get("/api/books/".concat(this.book.book_id)).then(function (response) {
         if (response.data.status) {} else {
           console.log(response.data.message);

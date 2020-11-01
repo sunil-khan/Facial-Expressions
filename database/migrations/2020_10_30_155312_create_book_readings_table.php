@@ -19,7 +19,6 @@ class CreateBookReadingsTable extends Migration
             $table->unsignedInteger('book_id');
             $table->unsignedInteger('book_total_pages');
             $table->unsignedInteger('book_current_page');
-            $table->unsignedInteger('book_current_paragraph');
             $table->timestamps();
         });
     }

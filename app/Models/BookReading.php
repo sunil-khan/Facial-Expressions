@@ -8,6 +8,6 @@ class BookReading extends Model
 {
     protected $primaryKey = 'reading_id';
     protected $fillable = [
-        'user_id','book_id','book_total_pages','book_current_page','book_current_paragraph',
+        'user_id','book_id','book_total_pages','book_current_page',
     ];
 }
