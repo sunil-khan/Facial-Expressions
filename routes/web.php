@@ -17,8 +17,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/books/{slug}', 'BooksController@show')->name('books.show');
-Route::resource('books', 'BooksController',['except' => ['create','show','edit']]);
-
-Route::get('/home', 'HomeController@index')->name('home');
-Route::post('/saveExpressions','HomeController@ajaxSaveExpressions');
+Route::group(['middleware' => ['auth:web']],function() {
+    Route::get('/home', 'BooksController@index')->name('home');
+    Route::get('/books/{slug}', 'BooksController@show')->name('books.show');
+    Route::resource('books', 'BooksController', ['except' => ['create', 'show', 'edit']]);
+});
