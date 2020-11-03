@@ -51,7 +51,6 @@ class HomeController extends Controller
     else
     {
       Storage::put('imgs/student_'.Auth::id().'/'.$img_name, $data);
-
     }
 
     if (Storage::exists('imgs/student_'.Auth::id().'/'.$img_name))

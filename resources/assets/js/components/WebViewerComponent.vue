@@ -5,6 +5,8 @@
 </template>
 
 <script>
+    import '@tensorflow/tfjs';
+
     import WebViewer from '@pdftron/webviewer';
     export default {
         props: ['book'],
@@ -15,7 +17,8 @@
             }
         },
         mounted() {
-        this.loadBook();
+
+            this.loadBook();
         },
         methods: {
             loadBook(){

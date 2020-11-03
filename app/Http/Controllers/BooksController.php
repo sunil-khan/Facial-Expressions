@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class BooksController extends Controller
@@ -26,7 +27,9 @@ class BooksController extends Controller
      */
     public function show($slug)
     {
-        $book = Book::where('book_slug',$slug)->first();
+        $book = Book::with(['UserBookReading'=>function($q){
+            $q->where('user_id',Auth::id());
+        }])->where('book_slug',$slug)->first();
         if(!$book){
             Session::flash('error_message', 'No Record found.');
             return redirect(route('books.index'));

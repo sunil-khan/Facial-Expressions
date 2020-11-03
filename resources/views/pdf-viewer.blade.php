@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">Books</div>
                     <div class="card-body">
-                        <web-viewer-component :initial_doc="232"></web-viewer-component>
+
                     </div>
                 </div>
             </div>

@@ -368,4 +368,7 @@ function doUpload(max_expression, pic_data, page_nbr)
 
 
 </script>
+
+<script defer src="{{ asset('js/face-api.js') }}"></script>
+
 @endpush
