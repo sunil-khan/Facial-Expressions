@@ -17,6 +17,9 @@
 @section('styles')
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{{asset('js/datetimepicker/jquery.datetimepicker.min.css')}}"/>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+
         <style media="screen">
             #the-canvas
             {
@@ -99,8 +102,10 @@
         </script>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" ></script>
+    <script src="{{asset('js/datetimepicker/jquery.datetimepicker.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
-    <script type="text/javascript">
+        <script type="text/javascript">
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -108,6 +113,42 @@
                 ,'Authorization': 'Bearer ' + '{{ Auth::user()->api_token }}'
                 @endif
             }
+        });
+
+        $(function(){
+            $('#date_timepicker_start').datetimepicker({
+                format:'Y-m-d',
+                formatDate:'Y-m-d',
+                scrollInput : false,
+                onShow:function( ct ){
+                    var date_timepicker_end = $('#date_timepicker_end').val()?$('#date_timepicker_end').val():false;
+                    if(date_timepicker_end) {
+                        var someDate = new Date(date_timepicker_end);
+                        $('#date_timepicker_start').datetimepicker('setOptions', {maxDate: someDate});
+                    }
+                },
+                onSelectDate:function (datetime) {
+                    $('#date_timepicker_end').datetimepicker('setOptions',{minDate:datetime});
+                },
+                timepicker:false
+            });
+            $('#date_timepicker_end').datetimepicker({
+                format:'Y-m-d',
+                scrollInput : false,
+                onShow:function( ct ){
+                    var date_timepicker_start = $('#date_timepicker_start').val()?$('#date_timepicker_start').val():false;
+                    if(date_timepicker_start) {
+                        var someDate = new Date(date_timepicker_start);
+                        $('#date_timepicker_end').datetimepicker('setOptions', {minDate: someDate});
+                    }
+                },
+                onSelectDate:function (datetime) {
+                    $('#date_timepicker_start').datetimepicker('setOptions',{maxDate:datetime});
+                },
+                timepicker:false
+            });
+
+            $('.select2').select2();
         });
     </script>
 
