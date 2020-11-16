@@ -8,7 +8,9 @@ use App\Models\BookReadingStats;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use Auth;
+use Illuminate\Support\Str;
 use Storage;
 class BookReadingController extends Controller
 {
@@ -71,6 +73,29 @@ class BookReadingController extends Controller
         $expresssion->save();
 
         return response()->json(['message'=>'success']);
+    }
+
+    function csvWriteExpression(Request $request){
+        $user_id = Auth::guard('api')->id();
+        $book_id = $request->book_id;
+        $fileName = "expressions_{$user_id}_{$book_id}.csv";
+        if(isset($request->expressions) && !empty($request->expressions)){
+
+            if (!File::exists(public_path('csvs'))) {
+                File::makeDirectory(public_path('csvs'), 0777, true, true);
+            }
+            $file = fopen(public_path("csvs/$fileName"),"w");
+            $columns = array('Expression', 'Value');
+            fputcsv($file, $columns);
+            foreach ($request->expressions as $expression){
+                $row = array(Str::ucfirst($expression['name']),$expression['y']*100);
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        }
+
+        return response()->json(['message'=>'success']);
+
     }
 
 }

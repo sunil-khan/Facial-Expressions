@@ -7,21 +7,27 @@
                     <div class="card-header">Title: {{ $book->book_title }}, Author Name: {{ $book->book_author_name }}</div>
                     <div class="card-body">
                         <div class="row">
+                            <div class="col-md-4">
+
+                                <div style="width: 100%;" id="live_graph"></div>
+
+                            </div>
+                            <div class="col-md-8">
+
+                                    <div id="navigation_controls" style="margin-bottom: 10px;">
+                                        <button class="btn btn-sm btn-primary" id="go_previous">Previous</button>
+                                        <input style="width: 60px;"  id="current_page" value="{{ isset($book->UserBookReading->book_current_page)?$book->UserBookReading->book_current_page:1 }}" type="number"/>
+                                        <button class="btn btn-sm btn-primary" id="go_next">Next</button>
+                                        <button class="btn btn-sm btn-primary" id="zoom_in">+</button>
+                                        <button class="btn btn-sm btn-primary" id="zoom_out">-</button>
+                                    </div>
+
                         <div id="my_pdf_viewer">
                             <div id="canvas_container">
                                 <canvas id="pdf_renderer" style="border: 1px solid black; direction: ltr;"></canvas>
-
-                                <div id="navigation_controls">
-                                    <button id="go_previous">Previous</button>
-                                    <input id="current_page" value="{{ isset($book->UserBookReading->book_current_page)?$book->UserBookReading->book_current_page:1 }}" type="number"/>
-                                    <button id="go_next">Next</button>
-                                </div>
-                                <div id="zoom_controls">
-                                    <button id="zoom_in">+</button>
-                                    <button id="zoom_out">-</button>
-                                </div>
                             </div>
                         </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -62,13 +68,21 @@
     <script src="{{ asset('js/pdfjs/build/pdf.js') }}"></script>
     <script src="{{ asset('js/face-api.js') }}"></script>
 
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/drilldown.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
 
     <script>
         var myState = {
             book_id:{{ $book->book_id }},
             pdf: null,
             currentPage: {{ isset($book->UserBookReading->book_current_page)?$book->UserBookReading->book_current_page:1 }},
-            zoom: 1.5
+            zoom: 1
         };
         var pdf_url = '{{ asset('uploads/books/'.$book->book_file) }}';
         pdfjsLib.GlobalWorkerOptions.workerSrc ='{{ asset('js/pdfjs/build/pdf.worker.js') }}';
@@ -178,12 +192,12 @@
 
         var width = 320;    // We will scale the photo width to this
         var height = 0;
-
+        var video = null;
+        var streaming = false;
         function startup()
         {
             // console.log(pagenumber);
-            var streaming = false;
-            var video = null;
+
             var canvas = null;
             var photo = null;
 
@@ -230,11 +244,12 @@
                         })
                         if(results)
                         {
-                            // console.log(results);
                             var max_expression_key;
                             results.forEach((bestMatch, i) =>
                             {
                                 let expression = bestMatch['faceExpressions'];
+                                //expression call on live graph..
+                                requestData(expression);
                                 //let recognize = bestMatch['faceMatcher'].toString().split(" ")[0]
                                 // let max = Math.max.apply(null, Object.values(expression))
                                 var max = Math.max.apply(null,Object.keys(expression).map(function(x){ return expression[x] }));
@@ -308,6 +323,139 @@
                 console.log(response);
             },"json");
         }
+
+        document.addEventListener('visibilitychange', function(){
+            console.log("visibility change.");
+        });
+        var live_graph;
+        window.addEventListener('load', function () {
+
+            Highcharts.chart('live_graph', {
+                chart: {
+                    type: 'bar',
+                    height: 600
+                },
+                title: {
+                    text: 'Live Facial Expressions'
+                },
+                legend: {
+                    enabled: false
+                },
+                subtitle: {
+                    text: ''
+                },
+                data: {
+                    csvURL: '{{ asset("csvs/expressions_".auth()->id()."_{$book->book_id}.csv") }}',
+                    enablePolling: true,
+                    dataRefreshRate: 5
+                },
+                plotOptions: {
+                    bar: {
+                        colorByPoint: true
+                    },
+                    series: {
+                        zones: [{
+                            color: '#4CAF50',
+                            value: 0
+                        }, {
+                            color: '#8BC34A',
+                            value: 10
+                        }, {
+                            color: '#CDDC39',
+                            value: 20
+                        }, {
+                            color: '#CDDC39',
+                            value: 30
+                        }, {
+                            color: '#FFEB3B',
+                            value: 40
+                        }, {
+                            color: '#FFEB3B',
+                            value: 50
+                        }, {
+                            color: '#FFC107',
+                            value: 60
+                        }, {
+                            color: '#FF9800',
+                            value: 70
+                        }, {
+                            color: '#FF5722',
+                            value: 80
+                        }, {
+                            color: '#F44336',
+                            value: 90
+                        }, {
+                            color: '#F44336',
+                            value: Number.MAX_VALUE
+                        }],
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y:.0f}%'
+                        }
+                    }
+                },
+                tooltip: {
+                    valueDecimals: 1,
+                    valueSuffix: '%'
+                },
+                xAxis: {
+                    type: 'category',
+                    labels: {
+                        style: {
+                            fontSize: '10px'
+                        }
+                    }
+                },
+                yAxis: {
+                    max: 100,
+                    title: false,
+                    plotBands: [{
+                        from: 0,
+                        to: 30,
+                        color: '#E8F5E9'
+                    }, {
+                        from: 30,
+                        to: 70,
+                        color: '#FFFDE7'
+                    }, {
+                        from: 70,
+                        to: 100,
+                        color: "#FFEBEE"
+                    }]
+                }
+            });
+
+        });
+
+
+        /**
+         * Request data from the server, add it to the graph and set a timeout to request again
+         */
+        async function requestData(expressions) {
+
+            var new_expressions = Object.keys(expressions).map(function(x,y)
+            {
+                var expression = {};
+                expression.name = x;
+                expression.y = expressions[x];
+                return expression;
+            });
+
+            $.post('/api/v1/csv-write-expression',{book_id:myState.book_id,expressions:new_expressions},function(response){
+                console.log(response);
+            },"json");
+
+            /*live_graph.update({
+                series:
+                    {
+                        name: "Expression",
+                        colorByPoint: true,
+                        data: new_expressions
+                    }
+            }, true, true);*/
+
+            //const default_expressions = ['angry','disgusted','fearful','happy','neutral','sad','surprised'];
+           }
 
 
     </script>

@@ -365,7 +365,9 @@ function doUpload(max_expression, pic_data, page_nbr)
   });
 }
 
+document.addEventListener('visibilitychange', function(){
 
+});
 
 </script>
 
