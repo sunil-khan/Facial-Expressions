@@ -50,6 +50,12 @@
 
                     </div>
 
+                        <div class="row" style="margin-top: 30px; display: none;">
+                            <div class="col-md-12">
+                                <div style="width: 100%;" id="bar_expression_graph"></div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -135,7 +141,7 @@
             ]
         });
 
-      var pie_graph =   Highcharts.chart('pie_graph', {
+        var pie_graph =   Highcharts.chart('pie_graph', {
             chart: {
                 type: 'pie',
                 options3d: {
@@ -172,7 +178,6 @@
                 data: []
             }]
         });
-
 
         function filterGraphData() {
             var book_id=$('#book_id').children("option:selected").val();
@@ -236,6 +241,59 @@
                 $('#page_no').append(newOption).trigger('change');
             }
         }
+
+
+        var bar_expression_graph = Highcharts.chart('bar_expression_graph', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Facial Expressions'
+            },
+            subtitle: {
+                text: ''
+            },
+            accessibility: {
+                announceNewData: {
+                    enabled: true
+                }
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Total Numbers'
+                }
+
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:.0f}'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.0f}</b> of total<br/>'
+            },
+
+            series: [
+                {
+                    name: "Expression",
+                    colorByPoint: true,
+                    data: [{"name":"Angry","y":4},{"name":"Happy","y":29}]
+                }
+            ]
+        });
+
     </script>
 
 @endpush
