@@ -23,6 +23,8 @@ Route::group(['middleware' => ['auth:web']],function() {
     Route::resource('books', 'BooksController', ['except' => ['create', 'show', 'edit']]);
 });
 
+Route::get('/books/reading/iframe', 'BooksController@iFrameBookReading')->name('books.reading.iframe');
+
 Route::get('/admin/dashboard', 'Admin\DashboardController@index')->name('admin.dashboard');
 Route::post('/admin/dashboard/filter-graph-data-ajax', 'Admin\DashboardController@getFilterGraphAjax')->name('admin.filter-graph-data-ajax');
 Route::post('/admin/dashboard/get-book-pages-ajax', 'Admin\DashboardController@getBookPagesAjax')->name('admin.get-book-pages-ajax');

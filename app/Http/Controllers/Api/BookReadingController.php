@@ -15,7 +15,7 @@ use Storage;
 class BookReadingController extends Controller
 {
     function readingTrack(Request $request){
-        $user_id = Auth::guard('api')->id();
+        $user_id = $request->user_id;
         $reading = BookReading::firstOrNew(['user_id'=>$user_id,'book_id'=>$request->book_id]);
         if(!isset($reading->reading_id)){
             $reading->book_total_pages = $request->total_pages;
@@ -47,7 +47,7 @@ class BookReadingController extends Controller
     }
 
     function expressionTrack(Request $request){
-        $user_id = Auth::guard('api')->id();
+        $user_id = $request->user_id;
         $img = $request->pic_data;
         $img = str_replace('data:image/jpeg;base64,', '', $img);
         $img = str_replace(' ', '+', $img);
@@ -76,7 +76,7 @@ class BookReadingController extends Controller
     }
 
     function csvWriteExpression(Request $request){
-        $user_id = Auth::guard('api')->id();
+        $user_id = $request->user_id;
         $book_id = $request->book_id;
         $fileName = "expressions_{$user_id}_{$book_id}.csv";
         if(isset($request->expressions) && !empty($request->expressions)){

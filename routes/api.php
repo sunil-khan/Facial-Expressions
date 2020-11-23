@@ -18,9 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'v1'],function() {
-    Route::group(['middleware' => ['auth:api']],function(){
         Route::post('/book-reading-track','Api\BookReadingController@readingTrack');
         Route::post('/book-reading-expression','Api\BookReadingController@expressionTrack');
         Route::post('/csv-write-expression','Api\BookReadingController@csvWriteExpression');
-    });
 });
