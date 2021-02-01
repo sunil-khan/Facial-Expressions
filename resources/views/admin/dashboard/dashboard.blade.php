@@ -24,14 +24,14 @@
                                 <option value="">Select Page</option>
                             </select>
                         </div>
-
+<!--
                         <div class="col-md-2">
                             <input type="text" class="form-control m-input " readonly placeholder="Start Date" id="date_timepicker_start">
                         </div>
 
                         <div class="col-md-2">
                             <input type="text" class="form-control m-input " readonly placeholder="End Date" id="date_timepicker_end">
-                        </div>
+                        </div>-->
 
                         <div class="col-md-2">
                             <button type="button" onclick="filterGraphData()" class="btn btn-secondary">Go</button>
@@ -55,6 +55,35 @@
                                 <div style="width: 100%;" id="bar_expression_graph"></div>
                             </div>
                         </div>
+
+
+                    <div class="row">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col">User</th>
+                                <th scope="col">Page No.</th>
+                                <th scope="col">Paragraph</th>
+                                <th scope="col">No. E. Type</th>
+                                <th scope="col">E. Count</th>
+                                <th scope="col">Time</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($expressions as $expression)
+                            <tr>
+                                <th scope="row">{{ $expression->user_id }}</th>
+                                <td>{{ $expression->page_no }}</td>
+                                <td>{{ $expression->paragraph_no }}</td>
+                                <td>{{ $expression->exp_type }}</td>
+                                <td>{{ $expression->exp_count }}</td>
+                                <td>{{ $expression->exp_utc }}</td>
+                            </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
 
                     </div>
                 </div>

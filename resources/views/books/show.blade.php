@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container">
+    <div class="">
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
@@ -79,6 +79,7 @@
 
     <script>
         var myState = {
+            user_id:{{ auth()->id() }},
             book_id:{{ $book->book_id }},
             pdf: null,
             currentPage: {{ isset($book->UserBookReading->book_current_page)?$book->UserBookReading->book_current_page:1 }},
@@ -313,13 +314,13 @@
         start_face_detection();
 
         function bookReadingTrack() {
-            $.post('/api/v1/book-reading-track',{book_id:myState.book_id,current_page:myState.currentPage,total_pages:myState.pdf._pdfInfo.numPages},function(response){
+            $.post('/api/v1/book-reading-track',{user_id:myState.user_id,book_id:myState.book_id,current_page:myState.currentPage,total_pages:myState.pdf._pdfInfo.numPages},function(response){
                 console.log(response);
             },"json");
         }
 
         function bookReadingExpression(max_expression,pic_data) {
-            $.post('/api/v1/book-reading-expression',{book_id:myState.book_id,current_page:myState.currentPage,'pic_data':pic_data,'expression_type':max_expression},function(response){
+            $.post('/api/v1/book-reading-expression',{user_id:myState.user_id,book_id:myState.book_id,current_page:myState.currentPage,'pic_data':pic_data,'expression_type':max_expression},function(response){
                 console.log(response);
             },"json");
         }
@@ -441,7 +442,7 @@
                 return expression;
             });
 
-            $.post('/api/v1/csv-write-expression',{book_id:myState.book_id,expressions:new_expressions},function(response){
+            $.post('/api/v1/csv-write-expression',{user_id:myState.user_id,book_id:myState.book_id,expressions:new_expressions},function(response){
                 console.log(response);
             },"json");
 

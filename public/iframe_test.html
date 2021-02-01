@@ -16,7 +16,6 @@
 	let end_point = 'http://fd.worldpixelmarket.com/books/reading/iframe';
 	var url_string = window.location.href;
 	var url = new URL(url_string);
-
 	let user_id = url.searchParams.get('user_id') ||  1;
 	let pdf_title = url.searchParams.get('pdf_title') ||  'Sampel PDF';
 	let pdf_url = url.searchParams.get('pdf_url') ||  'http://www.africau.edu/images/default/sample.pdf';
