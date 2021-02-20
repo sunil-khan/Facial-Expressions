@@ -1,13 +1,13 @@
 # Facial Expressions: Laravel 5.6 based system for analysis the Face Expressions.
 
-It is a project for demonstrating when user read the booking its will take automaticaly face expressions [Facial Expressions] System.
+Facial expression recoganition application while reading pdf books, this application record user's facial expressions while reading pdf book through this application.
 
 ## Clickable live-demo
 
 [demo: Facial Expressions](https://fd.worldpixelmarket.com/login)
 
-- __Email__: admin@admin.com
-- __Pass__: password
+- __Email__: demo-user@gmail.com
+- __Pass__: 12345678
 
 
 ## How to use
