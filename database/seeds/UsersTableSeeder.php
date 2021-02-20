@@ -16,10 +16,10 @@ class UsersTableSeeder extends Seeder
         $users = [
             [
                 'id'             => 1,
-                'name'           => 'Naveed Shahzad',
-                'email'          => 'lhrciit@gmail.com',
+                'name'           => 'Administration',
+                'email'          => 'admin@admin.com',
                 'api_token' => str_random(60),
-                'password' => Hash::make('12345678')
+                'password' => Hash::make('password')
             ],
         ];
         User::insert($users);
