@@ -4,7 +4,7 @@ It is a project for demonstrating when user read the booking its will take autom
 
 ## Clickable live-demo
 
-[demo: Facial Expressions](https://fd.worldpixelmarket.com)
+[demo: Facial Expressions](https://fd.worldpixelmarket.com/login)
 
 - __Email__: admin@admin.com
 - __Pass__: password
