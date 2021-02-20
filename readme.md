@@ -1,6 +1,6 @@
 # Facial Expressions: Laravel 5.6 based system for analysis the Face Expressions.
 
-Facial expression recoganition application while reading pdf books, this application record user's facial expressions while reading pdf book through this application.
+Facial expression recognition application while reading pdf books, this application record user's facial expressions while reading pdf book through this application.
 
 ## Clickable live-demo
 
